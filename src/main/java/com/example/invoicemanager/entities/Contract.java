@@ -1,7 +1,5 @@
 package com.example.invoicemanager.entities;
 
-import com.example.invoicemanager.enums.BarrelType;
-import com.example.invoicemanager.enums.ContractType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -38,8 +36,8 @@ public class Contract  {
     @Column(name = "quantity")
     private Long quantity;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "barrel_type")
+    @ManyToOne
+    @JoinColumn(name = "barrel_type_id")
     private BarrelType barrelType;
 
     @Column(name = "start_date")
@@ -58,7 +56,7 @@ public class Contract  {
     private List<Addendum> addendums = new ArrayList<>();
 
     // جمع بشکه های تعهد شده در قرارداد و الحاقیه ها
-    public Long getTotalCommittedBarrels() {
+    public Long getTotalBarrels() {
         int total = 0;
         if (addendums != null) {
             for (Addendum addendum : addendums) {

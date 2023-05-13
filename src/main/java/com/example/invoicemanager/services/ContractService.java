@@ -3,6 +3,7 @@ package com.example.invoicemanager.services;
 import com.example.invoicemanager.dtos.ContractDto;
 import com.example.invoicemanager.entities.Contract;
 import com.example.invoicemanager.entities.Customer;
+import com.example.invoicemanager.mappers.ContractMapper;
 import com.example.invoicemanager.repositories.ContractRepository;
 import com.example.invoicemanager.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,41 +13,38 @@ import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ContractService {
 
     private final ContractRepository contractRepository;
+    private final ContractMapper contractMapper;
     private final CustomerRepository customerRepository;
 
     @Autowired
-    public ContractService(ContractRepository contractRepository, CustomerRepository customerRepository) {
+    public ContractService(ContractRepository contractRepository, ContractMapper contractMapper, CustomerRepository customerRepository) {
         this.contractRepository = contractRepository;
+        this.contractMapper = contractMapper;
         this.customerRepository = customerRepository;
     }
 
     public List<ContractDto> getAllContracts() {
-        List<Contract> contracts = contractRepository.findAll();
-        List<ContractDto> contractDtoList = new ArrayList<>();
-        for (Contract contract : contracts) {
-            ContractDto contractDto = convertToDto(contract);
-            contractDtoList.add(contractDto);
-        }
-        return contractDtoList;
+        return  contractRepository.findAll().stream().map(contractMapper::toDto).collect(Collectors.toList());
+
     }
 
     public ContractDto createContract(ContractDto contractDto) {
-        Contract contract = convertToEntity(contractDto);
-        contract.setCustomer(getCustomerById(contractDto.getCustomerId()));
+        Contract contract = contractMapper.toEntity(contractDto);
         Contract savedContract = contractRepository.save(contract);
-        return convertToDto(savedContract);
+        return contractMapper.toDto(savedContract);
     }
 
     public ContractDto getContractById(Long id) {
         Optional<Contract> optionalContract = contractRepository.findById(id);
         if (optionalContract.isPresent()) {
             Contract contract = optionalContract.get();
-            return convertToDto(contract);
+            return contractMapper.toDto(contract);
         } else {
             return null;
         }
@@ -56,21 +54,11 @@ public class ContractService {
         Optional<Contract> optionalContract = contractRepository.findById(id);
         if (optionalContract.isPresent()) {
             Contract contract = optionalContract.get();
-            contract.setContractNumber(contractDto.getContractNumber());
-            contract.setContractDescription(contractDto.getContractDescription());
-            contract.setUnitPrice(contractDto.getUnitPrice());
-            contract.setQuantity(contractDto.getQuantity());
-            contract.setBarrelType(contractDto.getBarrelType());
-            contract.setStartDate(contractDto.getStartDate());
-            contract.setEndDate(contractDto.getEndDate());
-            contract.setAdvancePayment(contractDto.getAdvancePayment());
-            contract.setPerformanceBond(contractDto.getPerformanceBond());
-            contract.setCustomer(customerRepository.getById(contractDto.getCustomerId()));
-            Contract savedContract = contractRepository.save(contract);
-            return convertToDto(savedContract);
-        } else {
-            return null;
+            Contract partialUpdate = contractMapper.partialUpdate(contractDto, contract);
+            Contract saved = contractRepository.save(partialUpdate);
+            return contractMapper.toDto(saved);
         }
+        return null;
     }
 
     public void deleteContract(Long id) throws InterruptedIOException {
@@ -82,37 +70,7 @@ public class ContractService {
         }
     }
 
-    private ContractDto convertToDto(Contract contract) {
-        ContractDto contractDto = new ContractDto();
-        contractDto.setId(contract.getId());
-        contractDto.setContractNumber(contract.getContractNumber());
-        contractDto.setContractDescription(contract.getContractDescription());
-        contractDto.setUnitPrice(contract.getUnitPrice());
-        contractDto.setQuantity(contract.getQuantity());
-        contractDto.setBarrelType(contract.getBarrelType());
-        contractDto.setStartDate(contract.getStartDate());
-        contractDto.setEndDate(contract.getEndDate());
-        contractDto.setAdvancePayment(contract.getAdvancePayment());
-        contractDto.setPerformanceBond(contract.getPerformanceBond());
-        contractDto.setCustomerId(contract.getCustomer().getId());
-        contractDto.setTotalBarrels(contract.getTotalCommittedBarrels());
-        contractDto.setTotalAmount(contract.getTotalAmount());
-        return contractDto;
-    }
 
-    private Contract convertToEntity(ContractDto contractDto) {
-        Contract contract = new Contract();
-        contract.setContractNumber(contractDto.getContractNumber());
-        contract.setContractDescription(contractDto.getContractDescription());
-        contract.setUnitPrice(contractDto.getUnitPrice());
-        contract.setQuantity(contractDto.getQuantity());
-        contract.setBarrelType(contractDto.getBarrelType());
-        contract.setStartDate(contractDto.getStartDate());
-        contract.setEndDate(contractDto.getEndDate());
-        contract.setAdvancePayment(contractDto.getAdvancePayment());
-        contract.setPerformanceBond(contractDto.getPerformanceBond());
-        return contract;
-    }
     private Customer getCustomerById(Long customerId){
         Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
         return optionalCustomer.orElse(null);
