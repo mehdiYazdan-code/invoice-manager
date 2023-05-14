@@ -1,5 +1,6 @@
 package com.example.invoicemanager.dtos;
 
+import com.example.invoicemanager.entities.BarrelType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

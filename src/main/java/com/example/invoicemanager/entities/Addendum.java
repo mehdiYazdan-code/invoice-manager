@@ -22,8 +22,8 @@ public class Addendum {
     @JoinColumn(name = "contract_id", referencedColumnName = "id")
     private Contract contract;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "barrel_type")
+    @ManyToOne
+    @JoinColumn(name = "barrel_type_id")
     private BarrelType barrelType;
 
     @Column(name = "unit_price")
