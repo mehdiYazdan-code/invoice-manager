@@ -1,7 +1,5 @@
 package com.example.invoicemanager.entities;
 
-import com.example.invoicemanager.enums.BarrelType;
-import com.example.invoicemanager.enums.ContractType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
