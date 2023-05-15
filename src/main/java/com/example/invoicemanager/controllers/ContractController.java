@@ -47,7 +47,7 @@ public class ContractController {
     public ResponseEntity<ContractDto> update(@PathVariable("id") Long id, @RequestBody ContractDto contractDto) {
         ContractDto savedContractDto = contractService.updateContract(id, contractDto);
         if (savedContractDto != null) {
-            return new ResponseEntity<>(savedContractDto, HttpStatus.OK);
+            return new ResponseEntity<>(savedContractDto, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

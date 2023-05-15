@@ -52,6 +52,9 @@ public class Contract  {
     @Column(name = "performance_bond")
     private Long performanceBond;
 
+    @Column(name = "insurance_deposit")
+    private Long insuranceDeposit;
+
     @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL)
     private List<Addendum> addendums = new ArrayList<>();
 

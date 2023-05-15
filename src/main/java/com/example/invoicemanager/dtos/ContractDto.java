@@ -7,9 +7,6 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-/**
- * A DTO for the {@link com.example.invoicemanager.entities.Contract} entity
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,6 +22,9 @@ public class ContractDto implements Serializable {
     private LocalDate endDate;
     private Long advancePayment;
     private Long performanceBond;
+
+    private Long insuranceDeposit;
+
     private Long totalAmount;
     private Long totalBarrels;
 }
