@@ -1,6 +1,5 @@
 package com.example.invoicemanager.dto;
 
-import com.example.invoicemanager.enums.InvoiceStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,8 +15,9 @@ import java.util.List;
 public class InvoiceDto implements Serializable {
     private Long id;
     private Long contractId;
+    private Long customerID;
     private LocalDate issuedDate;
     private LocalDate dueDate;
-    private InvoiceStatus status;
+    private Integer statusId;
     private List<InvoiceItemDto> items;
 }

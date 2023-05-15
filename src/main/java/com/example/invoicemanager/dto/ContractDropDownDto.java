@@ -9,9 +9,10 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InvoiceItemDto implements Serializable {
+public class ContractDropDownDto implements Serializable {
     private Long id;
-    private Integer barrelTypeId;
-    private Long unitPrice;
-    private Long quantity;
+    private String contractNumber;
+    private String contractDescription;
+    private Long totalAmount;
+    private Long totalBarrels;
 }

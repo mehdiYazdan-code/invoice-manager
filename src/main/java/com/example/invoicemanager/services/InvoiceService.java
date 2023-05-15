@@ -23,26 +23,26 @@ public class InvoiceService {
     }
 
     public List<InvoiceDto> getAllInvoices() {
-       return invoiceRepository.findAll().stream().map(invoiceMapper::invoiceToInvoiceDto).collect(Collectors.toList());
+       return invoiceRepository.findAll().stream().map(invoiceMapper::toDto).collect(Collectors.toList());
     }
 
     public InvoiceDto getInvoiceById(Long id) {
         Invoice invoice = invoiceRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Invoice with id: " + id));
-        return invoiceMapper.invoiceToInvoiceDto(invoice);
+        return invoiceMapper.toDto(invoice);
     }
 
     public InvoiceDto createInvoice(InvoiceDto invoiceDto) {
-        Invoice invoice = invoiceMapper.invoiceDtoToInvoice(invoiceDto);
+        Invoice invoice = invoiceMapper.toEntity(invoiceDto);
         Invoice savedInvoice = invoiceRepository.save(invoice);
-        return invoiceMapper.invoiceToInvoiceDto(savedInvoice);
+        return invoiceMapper.toDto(savedInvoice);
     }
     public InvoiceDto updateInvoice(Long id,InvoiceDto invoiceDto){
         Invoice invoice = invoiceRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Invoice with id: " + id));
-        Invoice updateInvoiceFromInvoiceDto = invoiceMapper.updateInvoiceFromInvoiceDto(invoiceDto, invoice);
+        Invoice updateInvoiceFromInvoiceDto = invoiceMapper.partialUpdate(invoiceDto, invoice);
         Invoice updated = invoiceRepository.save(updateInvoiceFromInvoiceDto);
-        return invoiceMapper.invoiceToInvoiceDto(updated);
+        return invoiceMapper.toDto(updated);
     }
 
     public void deleteInvoice(Long id) {

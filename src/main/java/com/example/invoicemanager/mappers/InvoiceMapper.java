@@ -6,15 +6,17 @@ import org.mapstruct.*;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public interface InvoiceMapper {
+    @Mapping(target = "status.id" , source="statusId")
     @Mapping(source = "contractId", target = "contract.id")
-    Invoice invoiceDtoToInvoice(InvoiceDto invoiceDto);
-
+    Invoice toEntity(InvoiceDto invoiceDto);
+    @Mapping(target = "statusId" , source="status.id")
     @Mapping(source = "contract.id", target = "contractId")
-    InvoiceDto invoiceToInvoiceDto(Invoice invoice);
+    @Mapping(source = "contract.customer.id", target = "customerID")
+    InvoiceDto toDto(Invoice invoice);
 
     @Mapping(source = "contractId", target = "contract.id")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    Invoice updateInvoiceFromInvoiceDto(InvoiceDto invoiceDto, @MappingTarget Invoice invoice);
+    Invoice partialUpdate(InvoiceDto invoiceDto, @MappingTarget Invoice invoice);
 
     @AfterMapping
     default void linkItems(@MappingTarget Invoice invoice) {
