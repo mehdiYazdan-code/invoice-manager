@@ -20,6 +20,10 @@ public class InvoiceItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "barrel_type_id")
+    private BarrelType barrelType;
+
     @Column(name = "unit_price")
     private Long unitPrice;
 

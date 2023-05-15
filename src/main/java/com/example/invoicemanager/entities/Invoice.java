@@ -1,6 +1,5 @@
 package com.example.invoicemanager.entities;
 
-import com.example.invoicemanager.enums.InvoiceStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -29,8 +28,8 @@ public class Invoice {
     @Column(name = "due_date")
     private LocalDate dueDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status_id")
     private InvoiceStatus status;
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)

@@ -6,10 +6,11 @@ import org.mapstruct.*;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public interface InvoiceItemMapper {
-    InvoiceItem invoiceItemDtoToInvoiceItem(InvoiceItemDto invoiceItemDto);
-
-    InvoiceItemDto invoiceItemToInvoiceItemDto(InvoiceItem invoiceItem);
+    @Mapping(target = "barrelType.id" , source="barrelTypeId")
+    InvoiceItem toEntity(InvoiceItemDto invoiceItemDto);
+    @Mapping(target = "barrelTypeId" , source="barrelType.id")
+    InvoiceItemDto toDto(InvoiceItem invoiceItem);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    InvoiceItem updateInvoiceItemFromInvoiceItemDto(InvoiceItemDto invoiceItemDto, @MappingTarget InvoiceItem invoiceItem);
+    InvoiceItem partialUpdate(InvoiceItemDto invoiceItemDto, @MappingTarget InvoiceItem invoiceItem);
 }
